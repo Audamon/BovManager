@@ -7,6 +7,7 @@ import UserIcon from "@/components/icons/UserIcon";
 import CowIconFilled from "@/components/icons/CowIconFilled";
 import ClockIconFilled from "@/components/icons/ClockIconFilled";
 import UserIconFilled from "@/components/icons/UserIconFilled";
+import { Pressable } from "react-native";
 const AppTabs = () => {
   return (
     <Tabs
@@ -14,6 +15,9 @@ const AppTabs = () => {
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.textMuted,
+        tabBarButton: (props) => (
+          <Pressable {...props} android_ripple={{ color: "rgba(46, 111, 64, 0.15)" }} />
+        ),
       }}
     >
       <Tabs.Screen
