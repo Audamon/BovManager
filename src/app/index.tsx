@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 import { BigShoulders_800ExtraBold } from "@expo-google-fonts/big-shoulders";
 import { COLORS } from "@/constants/colors";
 import SplashScreen from "@/components/SplashScreen/splashScreen";
+import { Redirect } from "expo-router";
 //import { useEffect, useState } from "react";
 // Tela raiz — por enquanto em branco. É aqui que entra o Meu Rebanho.
 const Index = () => {
@@ -19,7 +20,7 @@ const Index = () => {
   //   };
   // }, []);
   //if (showSplash) {
-  if (true || !fonstLoaded) {
+  if (!fonstLoaded) {
     return (
       <SafeAreaProvider>
         <SplashScreen />
@@ -28,9 +29,7 @@ const Index = () => {
   }
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-        <View style={{ flex: 1 }} />
-      </SafeAreaView>
+      <Redirect href={"/rebanho"} />
     </SafeAreaProvider>
   );
 };
