@@ -15,8 +15,8 @@ const AppTabs = () => {
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.textMuted,
-        tabBarButton: (props) => (
-          <Pressable {...props} android_ripple={{ color: "rgba(46, 111, 64, 0.15)" }} />
+        tabBarButton: ({ ref, ...rest }) => (
+          <Pressable {...rest} android_ripple={{ color: "rgba(46, 111, 64, 0.15)" }} />
         ),
       }}
     >
