@@ -56,6 +56,7 @@ Estrutura de rotas do Expo Router:
 
 ```
 src/app/
+  _layout.tsx      # raiz — PaperProvider + SafeAreaProvider, envolve tudo
   index.tsx        # tela raiz — checagem inicial (sessão/fontes)
   (auth)/
     login.tsx
@@ -68,6 +69,8 @@ src/app/
 ```
 
 Grupos entre parênteses (`(auth)`, `(app)`) não aparecem na URL da rota — só organizam os arquivos.
+
+O `_layout.tsx` de raiz existe porque tanto o `SafeAreaProvider` quanto o `PaperProvider` precisam envolver **toda** a árvore de telas uma única vez — abrir um desses providers dentro de cada tela individualmente (como foi feito inicialmente no Splash/Login) funciona, mas duplica a medição de área segura à toa e não escala conforme mais telas são criadas.
 
 ## 5. Dependências e decisões técnicas
 
@@ -82,6 +85,9 @@ Grupos entre parênteses (`(auth)`, `(app)`) não aparecem na URL da rota — s�
 | `react-native-svg` | Renderização dos ícones customizados |
 | `dayjs` | Manipulação de datas |
 | `@expo-google-fonts/big-shoulders` | Fonte de título |
+| `@expo/vector-icons` | Necessário pro `react-native-paper` desenhar seus ícones internos no ambiente gerenciado da Expo (ver seção 7) |
+
+`react-native-paper` está configurado com tema próprio (cores da marca sobrepostas ao `MD3LightTheme` padrão) e ícone customizado via `PaperProvider`, na raiz do app (`src/app/_layout.tsx`).
 
 Backend planejado (fora do escopo do app mobile por enquanto): **.NET + PostgreSQL**, com uma versão web para geração de relatórios. Decisão pesou também critério de portfólio, por ser stack comum no mercado europeu.
 
@@ -99,6 +105,18 @@ Testamos usar só diferença de cor entre aba ativa e inativa, mas o contraste m
 
 Barra de navegação inferior (Rebanho, Escanear, Histórico, Perfil) via `<Tabs>` do Expo Router. O efeito de toque padrão do Android (ripple cinza) foi customizado para usar a cor da marca, via `tabBarButton` + `android_ripple` (a opção documentada em versões mais antigas do React Navigation, `tabBarPressColor`, não existe na versão vendorizada pelo Expo Router usada aqui).
 
+### 6.4 AppHeader
+
+Cabeçalho reutilizável (usado no Rebanho, e futuramente Histórico/Perfil), construído sobre o `Appbar` do React Native Paper (`Appbar.Header` + `Appbar.BackAction` + `Appbar.Content`) em vez de um `View` customizado do zero — já resolve estado de toque, acessibilidade e o layout clássico "voltar / título / ação" sem reinventar isso à mão. Props: `title`, `subtitle`, `leftIcon`, `rightIcon`, `onBackPress` (a seta de voltar só aparece se essa prop for passada).
+
+### 6.5 Rebanho — estado vazio (EmptyState)
+
+Primeiro dos três estados da tela (vazio/carregando/populado) implementado, também com TDD. Ícone, título, subtítulo e botão "Escanear brinco" (usando `Button` do Paper, com o `QrcodeIcon` customizado plugado via a prop `icon`).
+
+### 6.6 Rebanho — estado de carregando (LoadingState)
+
+Segundo estado da tela: 4 cards de skeleton (ícone falso + duas "cápsulas" de texto falso, em tons neutros do tema), com efeito de pulsação de opacidade via `Animated` do React Native — sem lib externa nenhuma (conferimos a lista completa de componentes do Paper antes: não existe nada de skeleton/placeholder de carregamento lá).
+
 ## 7. Problemas técnicos encontrados e soluções
 
 Registro dos problemas reais de configuração/ambiente resolvidos durante o desenvolvimento — parte do processo normal de trabalhar com um ecossistema (Expo/React Native/Jest) que muda rápido e cuja documentação nem sempre acompanha:
@@ -112,6 +130,14 @@ Registro dos problemas reais de configuração/ambiente resolvidos durante o des
 | Fonte customizada carregada mas sem efeito visual | `fontWeight` combinado com `fontFamily` de peso fixo faz o Android tentar sintetizar uma variante "bold" que não existe, e cai no fallback do sistema — em silêncio, sem erro | Remover `fontWeight` quando o `fontFamily` já é um peso específico (ex.: ExtraBold) |
 | Jest não encontra o módulo `expo-modules-core` | Dependência instalada, mas não promovida (hoisted) para a raiz do `node_modules` pelo npm | Adicionada como dependência direta do projeto |
 | `tabBarPressColor` não existe (erro de tipo) | Opção existe em versões antigas do `@react-navigation/bottom-tabs`, mas o Expo Router usa sua própria cópia vendorizada, sem essa opção | Customizar via `tabBarButton` + `android_ripple` diretamente |
+| Ícone customizado renderiza pequeno/invisível (aconteceu com `UserIcon`, `ClockIcon` e `QrcodeIcon`, em momentos diferentes) | O componente recebe `width`/`height` como prop mas nunca aplica isso no `<Svg>` (falta `style={{ width, height }}`) — sem tamanho explícito, o SVG não tem de onde puxar suas dimensões | Sempre aplicar `style={{ width, height }}` no `<Svg>` — virou item de checklist ao criar um ícone novo |
+| Suíte de teste inteira falha com "Jest encountered an unexpected token" apontando pro `global.css` | `theme.ts` importa `global.css` (usado só no build web); o Jest tenta interpretar esse arquivo como JavaScript e quebra na primeira regra CSS | `moduleNameMapper` no `jest.config.js` mapeando `.css` pra um mock vazio (`__mocks__/styleMock.js`) |
+| Componente renderiza "vazio" no teste (nenhum filho na árvore), mesmo sem usar nada de área segura | `<SafeAreaProvider>` sem `initialMetrics` esconde **todos** os filhos da árvore de consulta no ambiente de teste — não é só quem chama `useSafeAreaInsets`/`SafeAreaView`, é qualquer coisa dentro do Provider | Todo teste que usa `SafeAreaProvider` já nasce com `initialMetrics` preenchido, mesmo que o componente testado não use área segura |
+| Conteúdo não centraliza verticalmente na tela, mesmo com `flex: 1` no container certo | `flex: 1` só funciona se **toda a cadeia de pais**, até a raiz da tela, também participar do layout flex — faltava `style={{ flex: 1 }}` no `SafeAreaView` mais externo da tela | Aplicar `flex: 1` em cada nível da árvore que precisa esticar, não só no container mais interno |
+| Ícone do Paper aparece como quadrado vazado (glifo não carrega) | O ícone padrão do Paper depende da fonte do Material Community Icons, que não vem linkada por padrão num projeto Expo gerenciado | Configurar `PaperProvider` com `settings={{ icon: (props) => <MaterialCommunityIcons {...props} /> }}`, usando `@expo/vector-icons` |
+| `Appbar.Content`'s `subtitle` com aviso de depreciado | Material Design 3 (que o Paper v5 segue) removeu o padrão de duas linhas no app bar | Passar um `View` com dois `Text` customizados como `title`, já que essa prop aceita qualquer `React.ReactNode` |
+| Texto não quebra linha, fica todo numa linha só | `Text` sem `maxWidth`/`width` não tem limite pra forçar a quebra, principalmente dentro de um container que encolhe pro tamanho do conteúdo (`alignItems: "center"`) | Definir `maxWidth` (fixo ou em `%`) no estilo do texto |
+| `Error: Cannot access refs during render` ao inicializar um `Animated.Value` com `useRef(...).current` | O React 19 passou a proibir ler `.current` de um ref durante a fase de render — mesmo o padrão clássico de "inicializar só uma vez" que funcionava até a v18 | Trocar por `useState(() => new Animated.Value(1))` (o inicializador preguiçoso do `useState` também roda só uma vez, sem mexer em ref) |
 
 ## 8. Escopo e prazo
 
@@ -119,8 +145,9 @@ Prioridade definida: ter o **app mobile funcional até o final de outubro de 202
 
 ## 9. Próximos passos
 
-- Implementação da tela Meu Rebanho (lista de animais)
+- Tela Meu Rebanho: estados de carregando e populado (o vazio já está pronto — seção 6.5)
 - Persistência local (schema Drizzle)
 - Fluxo de escaneamento de brinco e cadastro de animal
 - Fluxo de transferência de brinco
+- Reativar o portão de sessão (removido temporariamente pra facilitar o desenvolvimento das telas — ver seção 4)
 - Integração com backend (.NET + PostgreSQL) quando existir

@@ -1,6 +1,7 @@
 import AppHeader from "@/components/AppHeader/AppHeader";
 import CowIcon from "@/components/icons/CowIcon";
 import EmptyState from "@/components/RebanhoComponents/EmptyState";
+import LoadingState from "@/components/RebanhoComponents/LoadingState";
 import { useTheme } from "@/hooks/use-theme";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -9,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Rebanho = () => {
   const [busca, setBusca] = useState("");
-  const [status /*, setStatus*/] = useState<"loading" | "empty" | "loaded">("empty");
+  const [status /*, setStatus*/] = useState<"loading" | "empty" | "loaded">("loading");
   const theme = useTheme();
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -37,6 +38,7 @@ const Rebanho = () => {
           ]}
         />
         {status === "empty" && <EmptyState />}
+        {status === "loading" && <LoadingState />}
       </View>
     </SafeAreaView>
   );
