@@ -1,11 +1,9 @@
 import Svg, { Path, Circle } from "react-native-svg";
 import TabIconProps from "./TabIconTypes";
+import { useTheme } from "@/hooks/use-theme";
 
-interface CowIconFilledProps extends TabIconProps {
-  holeColor?: string; // Cor dos olhos/narinas
-}
-
-const CowIconFilled = ({ width, height, color, holeColor = "#FFFFFF" }: CowIconFilledProps) => {
+const CowIconFilled = ({ width, height, color }: TabIconProps) => {
+  const theme = useTheme();
   return (
     <Svg viewBox="0 0 24 24" style={{ width: width, height: height }}>
       {/* Chifres */}
@@ -37,8 +35,8 @@ const CowIconFilled = ({ width, height, color, holeColor = "#FFFFFF" }: CowIconF
       {/* Cabeça */}
       <Path d="M6.5 11a5.5 5.5 0 0 1 11 0v2.5a5.5 5.5 0 0 1-11 0V11Z" fill={color} />
       {/* Olhos */}
-      <Circle cx="9.3" cy="12.2" r="0.6" fill={holeColor} />
-      <Circle cx="14.7" cy="12.2" r="0.6" fill={holeColor} />
+      <Circle cx="9.3" cy="12.2" r="0.6" fill={theme.surface} />
+      <Circle cx="14.7" cy="12.2" r="0.6" fill={theme.surface} />
 
       {/* Focinho */}
       <Path
@@ -46,8 +44,8 @@ const CowIconFilled = ({ width, height, color, holeColor = "#FFFFFF" }: CowIconF
         fill={color}
       />
       {/* Narinas */}
-      <Circle cx="10.3" cy="17.3" r="0.55" fill={holeColor} />
-      <Circle cx="13.7" cy="17.3" r="0.55" fill={holeColor} />
+      <Circle cx="10.3" cy="17.3" r="0.55" fill={theme.surface} />
+      <Circle cx="13.7" cy="17.3" r="0.55" fill={theme.surface} />
     </Svg>
   );
 };

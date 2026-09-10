@@ -1,6 +1,7 @@
 import AppHeader from "@/components/AppHeader/AppHeader";
 import CowIcon from "@/components/icons/CowIcon";
 import EmptyState from "@/components/RebanhoComponents/EmptyState";
+import LoadedState from "@/components/RebanhoComponents/LoadedState";
 import LoadingState from "@/components/RebanhoComponents/LoadingState";
 import { useTheme } from "@/hooks/use-theme";
 import { useState } from "react";
@@ -10,20 +11,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Rebanho = () => {
   const [busca, setBusca] = useState("");
-  const [status /*, setStatus*/] = useState<"loading" | "empty" | "loaded">("loading");
+  const [status /*, setStatus*/] = useState<"loading" | "empty" | "loaded">("loaded");
   const theme = useTheme();
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundElement }}>
       <AppHeader
         title="Rebanho"
         leftIcon={
           <View style={style.icon}>
-            <CowIcon color={theme.surface} width={32} height={32} />
+            <CowIcon color={theme.textTherdiary} width={32} height={32} />
           </View>
         }
         subtitle="teste"
       />
-      <View style={style.body}>
+      <View style={[style.body, { backgroundColor: theme.backgroundElement }]}>
         <Searchbar
           placeholder="Buscar por nome ou nº do brinco"
           placeholderTextColor={theme.textSecondary}
@@ -39,6 +40,7 @@ const Rebanho = () => {
         />
         {status === "empty" && <EmptyState />}
         {status === "loading" && <LoadingState />}
+        {status === "loaded" && <LoadedState />}
       </View>
     </SafeAreaView>
   );

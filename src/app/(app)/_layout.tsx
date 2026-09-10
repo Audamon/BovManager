@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import CowIcon from "@/components/icons/CowIcon";
-import { COLORS } from "@/constants/colors";
+import { COLORS, PALETTE } from "@/constants/colors";
 import QrcodeIcon from "@/components/icons/QrcodeIcon";
 import ClockIcon from "@/components/icons/ClockIcon";
 import UserIcon from "@/components/icons/UserIcon";
@@ -8,13 +8,19 @@ import CowIconFilled from "@/components/icons/CowIconFilled";
 import ClockIconFilled from "@/components/icons/ClockIconFilled";
 import UserIconFilled from "@/components/icons/UserIconFilled";
 import { Pressable } from "react-native";
+import { useTheme } from "@/hooks/use-theme";
 const AppTabs = () => {
+  const theme = useTheme();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textMuted,
+        tabBarInactiveTintColor: theme.textSecondary,
+        tabBarStyle: {
+          backgroundColor: theme.surface,
+          borderTopColor: PALETTE.neutral[200],
+        },
         tabBarButton: ({ ref, ...rest }) => (
           <Pressable {...rest} android_ripple={{ color: "rgba(46, 111, 64, 0.15)" }} />
         ),

@@ -1,6 +1,7 @@
 import { useTheme } from "@/hooks/use-theme";
 import { useEffect, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
+import IconBadge from "../icons/IconBadge";
 
 const LoadingState = () => {
   const [opacity] = useState(() => new Animated.Value(1));
@@ -21,7 +22,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <View style={[style.fakeIcon, { backgroundColor: theme.backgroundElement }]}></View>
+        <IconBadge backgroundColor={theme.backgroundElement} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>
@@ -31,7 +32,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <View style={[style.fakeIcon, { backgroundColor: theme.backgroundElement }]}></View>
+        <IconBadge backgroundColor={theme.backgroundElement} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>
@@ -41,7 +42,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <View style={[style.fakeIcon, { backgroundColor: theme.backgroundElement }]}></View>
+        <IconBadge backgroundColor={theme.backgroundElement} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>
@@ -51,7 +52,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <View style={[style.fakeIcon, { backgroundColor: theme.backgroundElement }]}></View>
+        <IconBadge backgroundColor={theme.backgroundElement} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>

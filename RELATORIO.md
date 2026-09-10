@@ -117,6 +117,20 @@ Primeiro dos três estados da tela (vazio/carregando/populado) implementado, tam
 
 Segundo estado da tela: 4 cards de skeleton (ícone falso + duas "cápsulas" de texto falso, em tons neutros do tema), com efeito de pulsação de opacidade via `Animated` do React Native — sem lib externa nenhuma (conferimos a lista completa de componentes do Paper antes: não existe nada de skeleton/placeholder de carregamento lá).
 
+### 6.7 IconBadge
+
+Componente mínimo extraído durante o Rebanho: um ícone dentro de uma caixa arredondada com fundo tintado. Reutilizado no `AppHeader` e no `RebanhoCard`. Decidimos **não** extrair um componente maior (tipo um "card genérico" compartilhado entre Rebanho e Histórico) — os dois usam ícone à esquerda, mas alinhamento e altura do card já divergem o suficiente pra um componente único virar uma pilha de props de exceção; só o badge do ícone valia a extração.
+
+### 6.8 StatusBadge
+
+Selo de status do animal (Saudável/Doente) ou texto simples sem selo (Sem pendências) — a própria presença da prop `badgeColor` decide qual das duas variantes aparece, sem uma prop `hasBadge` separada (mesma ideia do `onBackPress` do `AppHeader`: presença da prop já é o sinal, evita as duas props contradizerem uma à outra). Tamanho, peso de fonte e arredondamento ficaram fixos dentro do componente — não viraram prop, pra garantir que todo selo do app tenha a mesma cara.
+
+### 6.9 Rebanho — estado populado (LoadedState + RebanhoCard)
+
+Terceiro e último estado da tela. O card de cada animal (`RebanhoCard`) virou componente próprio desde o início, pensando na lista real vir de um `.map()` sobre os dados depois — os 3 cards de exemplo no `LoadedState` já são só chamadas desse componente com dados diferentes.
+
+O status do animal é tipado (`AnimalStatus`, em `src/types/animal.ts`) como união de valores fixos (`"saudavel" | "doente" | "atencao" | "semPendencias"`), não `string` livre — motivado por um bug real que isso evita (ver seção 7). Duas funções (`getStatusColor`, `getStatusText`) fazem `switch` sobre esse tipo pra decidir cor e texto exibido, com responsabilidades separadas.
+
 ## 7. Problemas técnicos encontrados e soluções
 
 Registro dos problemas reais de configuração/ambiente resolvidos durante o desenvolvimento — parte do processo normal de trabalhar com um ecossistema (Expo/React Native/Jest) que muda rápido e cuja documentação nem sempre acompanha:
@@ -130,6 +144,10 @@ Registro dos problemas reais de configuração/ambiente resolvidos durante o des
 | Fonte customizada carregada mas sem efeito visual | `fontWeight` combinado com `fontFamily` de peso fixo faz o Android tentar sintetizar uma variante "bold" que não existe, e cai no fallback do sistema — em silêncio, sem erro | Remover `fontWeight` quando o `fontFamily` já é um peso específico (ex.: ExtraBold) |
 | Jest não encontra o módulo `expo-modules-core` | Dependência instalada, mas não promovida (hoisted) para a raiz do `node_modules` pelo npm | Adicionada como dependência direta do projeto |
 | `tabBarPressColor` não existe (erro de tipo) | Opção existe em versões antigas do `@react-navigation/bottom-tabs`, mas o Expo Router usa sua própria cópia vendorizada, sem essa opção | Customizar via `tabBarButton` + `android_ripple` diretamente |
+| Digitação errada no `status` de um animal ("saúdavel" em vez de "saudável") fazia o selo de status não aparecer, em silêncio | `status` era `string` livre — o TypeScript não tinha como pegar o erro de digitação | Trocado por um union type (`AnimalStatus`), exportado de um lugar só e usado em todo componente que lida com status — agora um valor errado vira erro de compilação, não bug silencioso |
+| Texto/ícone branco em cima de um selo/cabeçalho colorido fica escuro no modo escuro | Usar `theme.surface` querendo dizer "branco fixo" — `surface` é a cor de fundo de card, que corretamente escurece no modo escuro; não é a mesma coisa que "cor de texto sobre um elemento colorido" | Usar `COLORS.surface` (fixo, sempre branco) nesses casos, não `theme.surface`; reservar tokens do tema pra coisa que deve mesmo mudar de cor com o tema |
+| Badge do ícone "sem fundo" dentro do card, só no modo escuro | `backgroundElement` e `surface` apontavam pro mesmo degrau da rampa (`neutral[800]`) no tema escuro — o badge tecnicamente tinha cor, só que idêntica à do card atrás dele | Separar os dois em degraus diferentes da rampa no `Colors.dark` |
+| Cabeçalho fixo (cor de marca, não muda com tema) parecia destoar do resto do app no modo escuro | Trade-off real, não bug: cabeçalho fixo e vívido ao lado de conteúdo/tab bar que escurecem junto pode parecer inconsistente | Decisão de design, não técnica — mantido fixo (`COLORS.primary`) por preferência, depois de comparar com a versão adaptável (`theme.primary`) lado a lado |
 | Ícone customizado renderiza pequeno/invisível (aconteceu com `UserIcon`, `ClockIcon` e `QrcodeIcon`, em momentos diferentes) | O componente recebe `width`/`height` como prop mas nunca aplica isso no `<Svg>` (falta `style={{ width, height }}`) — sem tamanho explícito, o SVG não tem de onde puxar suas dimensões | Sempre aplicar `style={{ width, height }}` no `<Svg>` — virou item de checklist ao criar um ícone novo |
 | Suíte de teste inteira falha com "Jest encountered an unexpected token" apontando pro `global.css` | `theme.ts` importa `global.css` (usado só no build web); o Jest tenta interpretar esse arquivo como JavaScript e quebra na primeira regra CSS | `moduleNameMapper` no `jest.config.js` mapeando `.css` pra um mock vazio (`__mocks__/styleMock.js`) |
 | Componente renderiza "vazio" no teste (nenhum filho na árvore), mesmo sem usar nada de área segura | `<SafeAreaProvider>` sem `initialMetrics` esconde **todos** os filhos da árvore de consulta no ambiente de teste — não é só quem chama `useSafeAreaInsets`/`SafeAreaView`, é qualquer coisa dentro do Provider | Todo teste que usa `SafeAreaProvider` já nasce com `initialMetrics` preenchido, mesmo que o componente testado não use área segura |

@@ -26,7 +26,7 @@ export const Colors = {
     // texto
     text: COLORS.textMain,
     textSecondary: COLORS.textMuted,
-
+    textTherdiary: COLORS.surface,
     // marca
     primary: COLORS.primary, // header do app, botão primário, tab ativa
     primaryPressed: PALETTE.primary[600], // estado pressed/hover do botão primário
@@ -47,7 +47,7 @@ export const Colors = {
   dark: {
     // superfícies
     background: PALETTE.neutral[900], // fundo de tela
-    backgroundElement: PALETTE.neutral[800], // item de lista alternado, input desabilitado
+    backgroundElement: PALETTE.neutral[700], // item de lista alternado, input desabilitado
     backgroundSelected: PALETTE.neutral[700], // item de lista selecionado
     surface: PALETTE.neutral[800], // cards, modais, folha de bottom sheet
     border: PALETTE.neutral[700], // borda de input, divisor de lista
@@ -55,9 +55,9 @@ export const Colors = {
     // texto
     text: PALETTE.neutral[50],
     textSecondary: PALETTE.neutral[300],
-
+    textTherdiary: PALETTE.neutral[300],
     // marca — tons mais claros da rampa, pra manter contraste no fundo escuro
-    primary: PALETTE.primary[300],
+    primary: PALETTE.neutral[800],
     primaryPressed: PALETTE.primary[400],
     onPrimary: PALETTE.primary[900],
 
