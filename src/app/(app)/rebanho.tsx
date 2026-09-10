@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader/AppHeader";
+import FloatingButton from "@/components/FloatingButton/FloatingButton";
 import CowIcon from "@/components/icons/CowIcon";
 import EmptyState from "@/components/RebanhoComponents/EmptyState";
 import LoadedState from "@/components/RebanhoComponents/LoadedState";
@@ -42,6 +43,7 @@ const Rebanho = () => {
         {status === "loading" && <LoadingState />}
         {status === "loaded" && <LoadedState />}
       </View>
+      <FloatingButton />
     </SafeAreaView>
   );
 };
