@@ -154,6 +154,8 @@ Decisões:
 - **Blocos de resultado subindo da parte de baixo**: `Animated.View` do `react-native-reanimated` com as layout animations `SlideInDown`/`SlideOutDown`. O bloco anima sozinho ao ser montado e desmontado, sem controlar valores de animação à mão nem usar uma lib de bottom sheet. Por enquanto os blocos são placeholders ("Animal encontrado!" / "Animal não encontrado!"); o conteúdo final segue o mockup (seção 3.3).
 - **Teste com câmera real**: no celular, pelo Expo Go (o projeto não usa `expo-dev-client`), lendo QR codes gerados com o texto do brinco (`0321-BR` existe no mock, `0417-BR` não) e exibidos no monitor.
 
+As telas de Histórico e Perfil, por enquanto, seguem só com `AppHeader` + texto de placeholder (`"Conteúdo do histórico"` / `"Conteúdo do perfil"`) — o conteúdo real delas fica pra depois da persistência local existir.
+
 ## 7. Problemas técnicos encontrados e soluções
 
 Registro dos problemas reais de configuração/ambiente resolvidos durante o desenvolvimento — parte do processo normal de trabalhar com um ecossistema (Expo/React Native/Jest) que muda rápido e cuja documentação nem sempre acompanha:
@@ -195,5 +197,6 @@ Prioridade definida: ter o **app mobile funcional até o final de outubro de 202
 - Persistência local (schema Drizzle), substituindo a busca simulada do scan
 - Cadastro de animal
 - Fluxo de transferência de brinco
+- Conteúdo real das telas Histórico e Perfil (hoje só a casca com `AppHeader` — ver seção 6.12), depois que a persistência existir
 - Reativar o portão de sessão (removido temporariamente pra facilitar o desenvolvimento das telas — ver seção 4)
 - Integração com backend (.NET + PostgreSQL) quando existir
