@@ -131,6 +131,29 @@ Terceiro e último estado da tela. O card de cada animal (`RebanhoCard`) virou c
 
 O status do animal é tipado (`AnimalStatus`, em `src/types/animal.ts`) como união de valores fixos (`"saudavel" | "doente" | "atencao" | "semPendencias"`), não `string` livre — motivado por um bug real que isso evita (ver seção 7). Duas funções (`getStatusColor`, `getStatusText`) fazem `switch` sobre esse tipo pra decidir cor e texto exibido, com responsabilidades separadas.
 
+### 6.10 Botão flutuante "Escanear" (FloatingButton)
+
+`FAB` do React Native Paper no canto inferior direito do Rebanho, na cor de destaque (`theme.secondary`) e com o `QrcodeIcon` customizado. Navega para a tela de escanear com `router.navigate("/escanear")`. As telas de Histórico e Perfil também ganharam uma estrutura base nessa etapa.
+
+### 6.11 Escanear — permissão de câmera (AskPermission) e ScanHeader
+
+A permissão de câmera é declarada no `app.json` (plugin do `expo-camera`, com a mensagem exibida pelo sistema) e consultada em tempo de execução com `useCameraPermissions()`. Enquanto ela não é concedida, a tela mostra o componente `AskPermission`: ícone de câmera cortada (`CameraOffIcon`), título, texto explicativo e um botão "Pedir Permissão" que chama `requestPermission`.
+
+O cabeçalho da tela virou um componente próprio, o `ScanHeader`, também sobre o `Appbar` do Paper: seta de voltar (`ArrowBackIcon`), título "Escanear Brinco" e, opcionalmente, o botão de flash (`FlashIcon`, ativado pela prop `showFlashIcon`). A cor de fundo é configurável (`backgroundColor`): sólida na tela de permissão e escura semitransparente por cima da câmera.
+
+### 6.12 Escanear — leitura do QR code e resultado
+
+A câmera (`CameraView`) lê só QR codes (`barcodeScannerSettings={{ barcodeTypes: ["qr"] }}`) e fica ligada apenas enquanto a tela está em foco (`useIsFocused`). Por cima dela há uma máscara escura com o visor recortado no centro e a dica "Aponte a câmera para o QR code do brinco".
+
+O resultado da leitura é um estado tipado como união discriminada: `ScanResult = idle | found (com o animal) | notFound (com o nº do brinco lido)`. Assim cada bloco de resultado só existe quando há os dados de que precisa. O QR code guarda apenas o número do brinco como texto, e a busca do animal (`buscarAnimalPorBrinco`) ainda é uma simulação com uma lista local, até a persistência existir.
+
+Decisões:
+
+- **Trava de leitura (`scanLock`)**: a câmera dispara dezenas de leituras por segundo com o mesmo QR. Um `useRef` trava o processamento após a primeira leitura, e o `onBarcodeScanned` só fica ligado enquanto o estado é `idle`. A próxima leitura só é liberada por um reset explícito, para o resultado não ficar trocando enquanto o usuário interage com ele.
+- **Reset ao sair da tela**: telas de aba não são desmontadas ao trocar de aba, então o resultado do último scan ficava preso. O reset roda no cleanup de um `useFocusEffect` (ver seção 7).
+- **Blocos de resultado subindo da parte de baixo**: `Animated.View` do `react-native-reanimated` com as layout animations `SlideInDown`/`SlideOutDown`. O bloco anima sozinho ao ser montado e desmontado, sem controlar valores de animação à mão nem usar uma lib de bottom sheet. Por enquanto os blocos são placeholders ("Animal encontrado!" / "Animal não encontrado!"); o conteúdo final segue o mockup (seção 3.3).
+- **Teste com câmera real**: no celular, pelo Expo Go (o projeto não usa `expo-dev-client`), lendo QR codes gerados com o texto do brinco (`0321-BR` existe no mock, `0417-BR` não) e exibidos no monitor.
+
 ## 7. Problemas técnicos encontrados e soluções
 
 Registro dos problemas reais de configuração/ambiente resolvidos durante o desenvolvimento — parte do processo normal de trabalhar com um ecossistema (Expo/React Native/Jest) que muda rápido e cuja documentação nem sempre acompanha:
@@ -156,6 +179,11 @@ Registro dos problemas reais de configuração/ambiente resolvidos durante o des
 | `Appbar.Content`'s `subtitle` com aviso de depreciado | Material Design 3 (que o Paper v5 segue) removeu o padrão de duas linhas no app bar | Passar um `View` com dois `Text` customizados como `title`, já que essa prop aceita qualquer `React.ReactNode` |
 | Texto não quebra linha, fica todo numa linha só | `Text` sem `maxWidth`/`width` não tem limite pra forçar a quebra, principalmente dentro de um container que encolhe pro tamanho do conteúdo (`alignItems: "center"`) | Definir `maxWidth` (fixo ou em `%`) no estilo do texto |
 | `Error: Cannot access refs during render` ao inicializar um `Animated.Value` com `useRef(...).current` | O React 19 passou a proibir ler `.current` de um ref durante a fase de render — mesmo o padrão clássico de "inicializar só uma vez" que funcionava até a v18 | Trocar por `useState(() => new Animated.Value(1))` (o inicializador preguiçoso do `useState` também roda só uma vez, sem mexer em ref) |
+| Câmera abre mas não reage a nenhum QR code (nem válido, nem inválido) | A função de leitura existia, mas não estava ligada ao `CameraView`; ao ligar, foi usado o nome antigo `onBarCodeScanned` (do extinto `expo-barcode-scanner`) | Usar a prop `onBarcodeScanned`, com "c" minúsculo, que é o nome no `CameraView` do `expo-camera` |
+| Bloco de resultado aparece como um retângulo branco vazio | Texto em `color: "white"` sobre o fundo branco do bloco | Usar cor de texto escura (ou o token de texto do tema) |
+| Bloco de resultado fica preso acima da barra de abas | O conteúdo de uma aba termina onde a barra de abas começa; o `bottom: 0` do bloco encosta nela, não no fundo da tela | Pendente: esconder a barra de abas na tela de escanear (`tabBarStyle: { display: "none" }`), que no mockup é tela cheia com botão voltar |
+| Resultado do scan anterior continua na tela ao sair e voltar | Telas de aba não são desmontadas ao trocar de aba, então o estado do componente sobrevive | Resetar o estado no cleanup de um `useFocusEffect`, que roda quando a tela perde o foco |
+| ESLint acusa "Calling setState synchronously within an effect" ao resetar o estado num `useEffect` observando `isFocused` | Regra do plugin de hooks do React contra `setState` síncrono no corpo de um efeito (causa renders em cascata) | Mover o reset para a função de limpeza do `useFocusEffect` |
 
 ## 8. Escopo e prazo
 
@@ -163,9 +191,9 @@ Prioridade definida: ter o **app mobile funcional até o final de outubro de 202
 
 ## 9. Próximos passos
 
-- Tela Meu Rebanho: estados de carregando e populado (o vazio já está pronto — seção 6.5)
-- Persistência local (schema Drizzle)
-- Fluxo de escaneamento de brinco e cadastro de animal
+- Escanear: conteúdo final dos blocos "Brinco reconhecido" (ver animal) e "Brinco não encontrado" (cadastrar / tentar novamente), esconder a barra de abas nessa tela, ligar o botão voltar e o flash, e ajustar visor, header e dica ao mockup
+- Persistência local (schema Drizzle), substituindo a busca simulada do scan
+- Cadastro de animal
 - Fluxo de transferência de brinco
 - Reativar o portão de sessão (removido temporariamente pra facilitar o desenvolvimento das telas — ver seção 4)
 - Integração com backend (.NET + PostgreSQL) quando existir
