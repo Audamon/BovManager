@@ -8,7 +8,7 @@ const AskPermission = ({ requestPermission }: any) => {
   const theme = useTheme();
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["top", "left", "right"]}>
-      <ScanHeader onBackPress={() => {}} />
+      <ScanHeader onBackPress={() => {}} backgroundColor={theme.background} />
       <View
         style={{
           flex: 1,
@@ -29,9 +29,6 @@ const AskPermission = ({ requestPermission }: any) => {
         >
           Pra ler o brinco, o BovManager precisa acessar a câmera do aparelho.
         </Text>
-        <Text onPress={requestPermission} style={{ color: "blue", marginTop: 10 }}>
-          Clique aqui para solicitar permissão.
-        </Text>
         <Button
           onPress={requestPermission}
           style={{
@@ -40,12 +37,16 @@ const AskPermission = ({ requestPermission }: any) => {
             paddingHorizontal: 20,
             height: 48,
             //width: 187,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 8,
           }}
           labelStyle={{ fontSize: 14, fontWeight: "600" }}
           textColor={theme.background}
           mode="elevated"
         >
-          Abrir Configurações
+          Pedir Permissão
         </Button>
       </View>
     </SafeAreaView>
