@@ -3,9 +3,11 @@ import TagOnIcon from "../icons/TagOnIcon";
 import { useTheme } from "@/hooks/use-theme";
 import { Button } from "react-native-paper";
 import QrcodeIcon from "../icons/QrcodeIcon";
+import { useRouter } from "expo-router";
 
 const EmptyState = () => {
   const theme = useTheme();
+  const router = useRouter();
   return (
     <View style={style.body}>
       <TagOnIcon color={theme.textSecondary} width={56} height={56} />
@@ -20,6 +22,7 @@ const EmptyState = () => {
         textColor={theme.onSecondary}
         style={style.button}
         icon={({ size, color }) => <QrcodeIcon width={size} height={size} color={color} />}
+        onPress={() => router.navigate("/escanear")}
       >
         Escanear brinco
       </Button>

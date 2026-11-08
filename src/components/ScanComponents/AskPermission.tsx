@@ -8,7 +8,7 @@ const AskPermission = ({ requestPermission }: any) => {
   const theme = useTheme();
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["top", "left", "right"]}>
-      <ScanHeader onBackPress={() => {}} backgroundColor={theme.background} />
+      <ScanHeader backgroundColor={theme.background} />
       <View
         style={{
           flex: 1,

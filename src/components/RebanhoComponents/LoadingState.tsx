@@ -22,7 +22,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <IconBadge backgroundColor={theme.backgroundElement} />
+        <IconBadge backgroundColor={theme.iconBadge} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>
@@ -32,7 +32,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <IconBadge backgroundColor={theme.backgroundElement} />
+        <IconBadge backgroundColor={theme.iconBadge} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>
@@ -42,7 +42,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <IconBadge backgroundColor={theme.backgroundElement} />
+        <IconBadge backgroundColor={theme.iconBadge} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>
@@ -52,7 +52,7 @@ const LoadingState = () => {
         testID="loading-placeholder"
         style={[style.box, { opacity, backgroundColor: theme.surface }]}
       >
-        <IconBadge backgroundColor={theme.backgroundElement} />
+        <IconBadge backgroundColor={theme.iconBadge} />
         <View style={style.capsuleRow}>
           <View style={[style.longCapsule, { backgroundColor: theme.backgroundElement }]}></View>
           <View style={[style.shortCapsule, { backgroundColor: theme.backgroundElement }]}></View>

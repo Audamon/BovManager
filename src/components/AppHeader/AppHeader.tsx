@@ -3,6 +3,7 @@ import { useTheme } from "@/hooks/use-theme";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 interface AppHeaderProps {
   title: string;
   subtitle?: string;
@@ -15,7 +16,13 @@ const AppHeader = ({ title, subtitle, icon, leftIcon, rightIcon, onBackPress }: 
   const theme = useTheme();
   return (
     <Appbar.Header style={[style.header, { backgroundColor: theme.primary }]} statusBarHeight={0}>
-      {onBackPress && <Appbar.BackAction onPress={onBackPress} color={COLORS.surface} />}
+      {onBackPress && (
+        <Appbar.Action
+          icon={({ size, color }) => <ArrowBackIcon color={color} width={size} height={size} />}
+          color={theme.textTherdiary}
+          onPress={onBackPress}
+        />
+      )}
       {leftIcon}
       <Appbar.Content
         title={

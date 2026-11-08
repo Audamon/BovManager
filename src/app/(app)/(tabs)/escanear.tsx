@@ -1,36 +1,38 @@
 import AskPermission from "@/components/ScanComponents/AskPermission";
+import ScanResultSheet from "@/components/ScanComponents/ScanResultSheet";
 import ScanHeader from "@/components/ScanHeader/ScanHeader";
+import { db } from "@/db/client";
+import { animals, Animal } from "@/db/schema";
 import { useTheme } from "@/hooks/use-theme";
+import { eq } from "drizzle-orm";
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from "expo-camera";
-import { useFocusEffect, useIsFocused } from "expo-router";
-import React, { useCallback, useRef } from "react";
+import { useFocusEffect, useIsFocused, useRouter } from "expo-router";
+import React, { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-type Animal = {
-  id: string;
-  brinco: string;
-};
-type ScanResult =
-  { status: "idle" } | { status: "found"; animal: Animal } | { status: "notFound"; brinco: string };
+import { SafeAreaView } from "react-native-safe-area-context";
+export type { Animal };
+export type ScanResult =
+  | { status: "idle" }
+  | { status: "found"; animal: Animal }
+  | { status: "notFound"; earRing: string };
 const Escanear = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanResult, setScanResult] = React.useState<ScanResult>({ status: "idle" });
   const scanLock = useRef(false);
   const isFocused = useIsFocused();
-
+  const router = useRouter();
+  const [torchOn, setTorchOn] = useState<boolean>(false);
   const theme = useTheme();
   const handleScan = ({ data }: BarcodeScanningResult) => {
     if (scanLock.current) return;
     scanLock.current = true;
     const animal = buscarAnimalPorBrinco(data);
-    setScanResult(animal ? { status: "found", animal } : { status: "notFound", brinco: data });
+    setScanResult(animal ? { status: "found", animal } : { status: "notFound", earRing: data });
   };
   const buscarAnimalPorBrinco = (brinco: string): Animal | null => {
-    // Simulação de busca em um banco de dados
-    const animais: Animal[] = [{ id: "1", brinco: "0321-BR" }];
-    return animais.find((a) => a.brinco === brinco) || null;
+    const found = db.select().from(animals).where(eq(animals.earRing, brinco)).get();
+    return found ?? null;
   };
   const resetScan = () => {
     scanLock.current = false;
@@ -41,6 +43,7 @@ const Escanear = () => {
       return () => {
         scanLock.current = false;
         setScanResult({ status: "idle" });
+        setTorchOn(false);
       };
     }, []),
   );
@@ -54,16 +57,18 @@ const Escanear = () => {
       edges={["top", "left", "right"]}
     >
       <ScanHeader
-        onBackPress={() => {}}
+        onBackPress={() => router.back()}
         zIndex={10}
         backgroundColor={"rgba(0,0,0,0.85)"}
-        onFlashPress={() => {}}
+        overCamera
+        onFlashPress={() => setTorchOn((on) => !on)}
         showFlashIcon={true}
       />
       {isFocused && (
         <CameraView
           style={{ flex: 1 }}
           facing="back"
+          enableTorch={torchOn}
           barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
           onBarcodeScanned={scanResult.status === "idle" ? handleScan : undefined}
         />
@@ -80,16 +85,12 @@ const Escanear = () => {
       <View style={style.scannerTextContainer}>
         <Text style={style.scannerText}>Aponte a câmera para o QR code do brinco</Text>
       </View>
-      {scanResult.status === "found" && (
-        <Animated.View entering={SlideInDown} exiting={SlideOutDown} style={style.sheet}>
-          <Text style={style.foundText}>Animal encontrado!</Text>
-        </Animated.View>
-      )}
-      {scanResult.status === "notFound" && (
-        <Animated.View entering={SlideInDown} exiting={SlideOutDown} style={style.sheet}>
-          <Text style={style.notFoundText}>Animal não encontrado!</Text>
-        </Animated.View>
-      )}
+      <ScanResultSheet
+        result={scanResult}
+        onRegisterNow={(earRing) => router.push(`/cadastro?earRing=${earRing}`)}
+        onRetry={resetScan}
+        onViewAnimal={(animal) => router.push(`/animal/${animal.id}`)}
+      />
     </SafeAreaView>
   );
 };
@@ -101,13 +102,14 @@ const style = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 100,
-    backgroundColor: "#fff", // ou "#fff" para testar
+    //backgroundColor: "#fff", // ou "#fff" para testar
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 22,
     paddingHorizontal: 20,
     paddingBottom: 30,
     gap: 14,
+    height: 250,
   },
   foundText: {
     color: "black",
@@ -138,7 +140,7 @@ const style = StyleSheet.create({
   },
   scannerTextContainer: {
     position: "absolute",
-    bottom: 100,
+    bottom: 150,
     left: "5%",
     right: "5%",
     alignItems: "center",

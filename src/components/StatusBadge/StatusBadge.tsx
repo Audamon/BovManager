@@ -31,7 +31,7 @@ const StatusBadge = ({ text, color }: StatusBadgeProps) => {
 };
 const style = StyleSheet.create({
   badge: {
-    borderRadius: 8,
+    borderRadius: 999,
     height: 21,
     paddingVertical: 4,
     display: "flex",

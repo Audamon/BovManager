@@ -22,11 +22,15 @@ export const Colors = {
     backgroundSelected: PALETTE.neutral[200], // item de lista selecionado
     surface: COLORS.surface, // cards, modais, folha de bottom sheet
     border: PALETTE.neutral[200], // borda de input, divisor de lista
+    iconBadge: PALETTE.neutral[500], // fundo do círculo/caixa de ícone (RebanhoCard, avatar, etc.) — mesmo tom do modo escuro, por pedido
+    onIconBadge: PALETTE.neutral[0], // ícone/texto sobre o iconBadge — fixo, pra sempre contrastar com o tom médio acima
+    authBackground: PALETTE.primary[100], // fundo das telas de login/cadastro/recuperação — verde bem claro
 
     // texto
     text: COLORS.textMain,
     textSecondary: COLORS.textMuted,
     textTherdiary: COLORS.surface,
+    segmentedUnselected: PALETTE.primary[400], // texto/borda do SegmentedButtons não selecionado — verde claro, não o branco de textTherdiary
     // marca
     primary: COLORS.primary, // header do app, botão primário, tab ativa
     primaryPressed: PALETTE.primary[600], // estado pressed/hover do botão primário
@@ -51,11 +55,15 @@ export const Colors = {
     backgroundSelected: PALETTE.neutral[700], // item de lista selecionado
     surface: PALETTE.neutral[800], // cards, modais, folha de bottom sheet
     border: PALETTE.neutral[700], // borda de input, divisor de lista
+    iconBadge: PALETTE.neutral[500], // fundo do círculo/caixa de ícone — mais claro que o card por trás, pra não sumir no escuro
+    onIconBadge: PALETTE.neutral[0],
+    authBackground: PALETTE.neutral[900], // igual ao fundo padrão — o verde claro é só pro modo claro
 
     // texto
     text: PALETTE.neutral[50],
     textSecondary: PALETTE.neutral[300],
     textTherdiary: PALETTE.neutral[300],
+    segmentedUnselected: PALETTE.neutral[300], // mesmo valor de antes — só o modo claro muda
     // marca — tons mais claros da rampa, pra manter contraste no fundo escuro
     primary: PALETTE.neutral[800],
     primaryPressed: PALETTE.primary[300],

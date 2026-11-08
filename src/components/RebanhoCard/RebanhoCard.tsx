@@ -5,14 +5,14 @@ import StatusBadge from "../StatusBadge/StatusBadge";
 import { useTheme } from "@/hooks/use-theme";
 interface RebanhoCardProps {
   animal: {
-    name: string;
+    name?: string;
     status: Animalstatus;
-    age: number;
-    earRing: string;
-    breed: string;
+    age?: number;
+    earRing?: string;
+    breed?: string;
   };
 }
-type Animalstatus = "doente" | "saudavel" | "atencao" | "semPendencias";
+export type Animalstatus = "doente" | "saudavel" | "atencao" | "semPendencias";
 
 const RebanhoCard = ({ animal }: RebanhoCardProps) => {
   const theme = useTheme();
@@ -41,8 +41,8 @@ const RebanhoCard = ({ animal }: RebanhoCardProps) => {
   return (
     <View style={[style.box, { backgroundColor: theme.surface }]}>
       <IconBadge
-        backgroundColor={theme.backgroundElement}
-        icon={<CowIcon width={24} height={24} color={theme.textSecondary} />}
+        backgroundColor={theme.iconBadge}
+        icon={<CowIcon width={24} height={24} color={theme.onIconBadge} />}
       />
       <View style={style.capsuleRow}>
         <View style={style.longCapsule}>

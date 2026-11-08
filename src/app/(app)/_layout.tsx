@@ -1,76 +1,18 @@
-import { Tabs } from "expo-router";
-import CowIcon from "@/components/icons/CowIcon";
-import { COLORS, PALETTE } from "@/constants/colors";
-import QrcodeIcon from "@/components/icons/QrcodeIcon";
-import ClockIcon from "@/components/icons/ClockIcon";
-import UserIcon from "@/components/icons/UserIcon";
-import CowIconFilled from "@/components/icons/CowIconFilled";
-import ClockIconFilled from "@/components/icons/ClockIconFilled";
-import UserIconFilled from "@/components/icons/UserIconFilled";
-import { Pressable } from "react-native";
-import { useTheme } from "@/hooks/use-theme";
-const AppTabs = () => {
-  const theme = useTheme();
+import { Stack } from "expo-router";
+
+const AppStack = () => {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: theme.textSecondary,
-        tabBarStyle: {
-          backgroundColor: theme.surface,
-          borderTopColor: PALETTE.neutral[200],
-        },
-        tabBarButton: ({ ref, ...rest }) => (
-          <Pressable {...rest} android_ripple={{ color: "rgba(46, 111, 64, 0.15)" }} />
-        ),
-      }}
-    >
-      <Tabs.Screen
-        name="rebanho"
-        options={{
-          title: "Rebanho",
-          tabBarIcon: ({ size, color, focused }) =>
-            focused ? (
-              <CowIconFilled width={size} height={size} color={color} />
-            ) : (
-              <CowIcon width={size} height={size} color={color} />
-            ),
-        }}
-      />
-      <Tabs.Screen
-        name="escanear"
-        options={{
-          title: "Escanear",
-          tabBarIcon: ({ size, color }) => <QrcodeIcon width={size} height={size} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="historico"
-        options={{
-          title: "Histórico",
-          tabBarIcon: ({ size, color, focused }) =>
-            focused ? (
-              <ClockIconFilled width={size} height={size} color={color} />
-            ) : (
-              <ClockIcon width={size} height={size} color={color} />
-            ),
-        }}
-      />
-      <Tabs.Screen
-        name="perfil"
-        options={{
-          title: "Perfil",
-          tabBarIcon: ({ size, color, focused }) =>
-            focused ? (
-              <UserIconFilled width={size} height={size} color={color} />
-            ) : (
-              <UserIcon width={size} height={size} color={color} />
-            ),
-        }}
-      />
-    </Tabs>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="cadastro" />
+      <Stack.Screen name="animal/[id]" />
+      <Stack.Screen name="transferir" />
+      <Stack.Screen name="transferir-confirmar" />
+      <Stack.Screen name="editar-animal" />
+      <Stack.Screen name="vacina-nova" />
+      <Stack.Screen name="trocar-senha" />
+    </Stack>
   );
 };
 
-export default AppTabs;
+export default AppStack;
