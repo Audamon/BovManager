@@ -5,7 +5,6 @@ import StatusBadge from "../StatusBadge/StatusBadge";
 import { useTheme } from "@/hooks/use-theme";
 interface RebanhoCardProps {
   animal: {
-    name?: string;
     status: Animalstatus;
     age?: number;
     earRing?: string;
@@ -46,11 +45,11 @@ const RebanhoCard = ({ animal }: RebanhoCardProps) => {
       />
       <View style={style.capsuleRow}>
         <View style={style.longCapsule}>
-          <Text style={[style.animalName, { color: theme.text }]}>{animal.name}</Text>
+          <Text style={[style.animalName, { color: theme.text }]}>{animal.earRing}</Text>
         </View>
         <View style={style.shortCapsule}>
           <Text style={[style.animalInfo, { color: theme.textSecondary }]}>
-            brinco {animal.earRing} · {animal.breed} · {animal.age} anos
+            {animal.breed} · {animal.age} anos
           </Text>
         </View>
       </View>

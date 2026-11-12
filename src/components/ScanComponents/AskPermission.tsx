@@ -36,7 +36,6 @@ const AskPermission = ({ requestPermission }: any) => {
             backgroundColor: theme.primaryPressed,
             paddingHorizontal: 20,
             height: 48,
-            //width: 187,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

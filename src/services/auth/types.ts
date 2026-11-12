@@ -5,14 +5,6 @@ export interface AuthUser {
   farm: string;
 }
 
-/**
- * Contrato de autenticação independente de onde os dados realmente moram.
- * Hoje só existe `localAuthRepository` (SQLite no aparelho). Quando o
- * backend em .NET existir, basta criar um `remoteAuthRepository` que
- * implemente essa mesma interface (chamando a API em vez do SQLite) e
- * trocar a linha em `index.ts` — nenhum componente que usa `authRepository`
- * precisa mudar.
- */
 export interface AuthRepository {
   createUser(data: {
     name: string;

@@ -1,12 +1,6 @@
 import Svg, { Path } from "react-native-svg";
 import TabIconProps from "./TabIconTypes";
 
-// Versão sólida do ClockIcon, pra estado ativo da tab bar. Os dois
-// ponteiros viram recortes transparentes dentro do disco preenchido
-// (fillRule evenodd) — sem isso, um ponteiro da mesma cor do disco
-// ficaria invisível. Os dois recortes não se tocam de propósito: se
-// se sobrepusessem, o evenodd contaria a sobreposição duas vezes e
-// "descortaria" ela de volta.
 const ClockIconFilled = ({ width, height, color }: TabIconProps) => {
   return (
     <Svg viewBox="0 0 24 24" style={{ width: width, height: height }}>

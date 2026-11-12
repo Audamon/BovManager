@@ -1,70 +1,51 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import "@/global.css";
 
 import { Platform } from "react-native";
 
 import { COLORS, PALETTE } from "./colors";
 
-/**
- * Tokens semânticos claro/escuro, derivados da PALETTE em `colors.ts`.
- * Nada aqui é um hex "solto" — cada linha aponta pro degrau da rampa de
- * onde veio, então dá pra rastrear qualquer cor até a família de origem.
- */
 export const Colors = {
   light: {
-    // superfícies
-    background: COLORS.background, // fundo de tela
-    backgroundElement: PALETTE.neutral[100], // item de lista alternado, input desabilitado
-    backgroundSelected: PALETTE.neutral[200], // item de lista selecionado
-    surface: COLORS.surface, // cards, modais, folha de bottom sheet
-    border: PALETTE.neutral[200], // borda de input, divisor de lista
-    iconBadge: PALETTE.neutral[500], // fundo do círculo/caixa de ícone (RebanhoCard, avatar, etc.) — mesmo tom do modo escuro, por pedido
-    onIconBadge: PALETTE.neutral[0], // ícone/texto sobre o iconBadge — fixo, pra sempre contrastar com o tom médio acima
-    authBackground: PALETTE.primary[100], // fundo das telas de login/cadastro/recuperação — verde bem claro
+    background: COLORS.background,
+    backgroundElement: PALETTE.neutral[100],
+    backgroundSelected: PALETTE.neutral[200],
+    surface: COLORS.surface,
+    border: PALETTE.neutral[200],
+    iconBadge: PALETTE.neutral[500],
+    onIconBadge: PALETTE.neutral[0],
+    authBackground: PALETTE.primary[100],
 
-    // texto
     text: COLORS.textMain,
     textSecondary: COLORS.textMuted,
     textTherdiary: COLORS.surface,
-    segmentedUnselected: PALETTE.primary[400], // texto/borda do SegmentedButtons não selecionado — verde claro, não o branco de textTherdiary
-    // marca
-    primary: COLORS.primary, // header do app, botão primário, tab ativa
-    primaryPressed: PALETTE.primary[600], // estado pressed/hover do botão primário
-    onPrimary: PALETTE.neutral[0], // texto/ícone sobre fundo primary
+    segmentedUnselected: PALETTE.primary[400],
+    primary: COLORS.primary,
+    primaryPressed: PALETTE.primary[600],
+    onPrimary: PALETTE.neutral[0],
 
-    secondary: COLORS.secondary, // CTA "Escanear brinco" — único por tela
-    secondaryPressed: PALETTE.secondary[600], // estado pressed/hover do CTA
-    onSecondary: PALETTE.neutral[900], // texto/ícone escuro sobre fundo secondary (5.6:1 — branco ficaria em 2.9:1)
+    secondary: COLORS.secondary,
+    secondaryPressed: PALETTE.secondary[600],
+    onSecondary: PALETTE.neutral[900],
 
-    // estados do rebanho (saúde, vacinação, transferência) — sempre selo com
-    // fundo sólido, nunca fundo em tom pastel: um tom pastel quase some sob
-    // sol forte (a diferença pro branco do card fica abaixo de 1.2:1)
-    success: PALETTE.success[700], // fundo do selo "Saudável" / "Vacinado" — 6.7:1 com texto branco
+    success: PALETTE.success[700],
     onSuccess: PALETTE.neutral[0],
-    danger: PALETTE.danger[600], // fundo do selo "Doente" / erro de leitura — 7.4:1 com texto branco
+    danger: PALETTE.danger[600],
     onDanger: PALETTE.neutral[0],
   },
   dark: {
-    // superfícies
-    background: PALETTE.neutral[900], // fundo de tela
-    backgroundElement: PALETTE.neutral[700], // item de lista alternado, input desabilitado
-    backgroundSelected: PALETTE.neutral[700], // item de lista selecionado
-    surface: PALETTE.neutral[800], // cards, modais, folha de bottom sheet
-    border: PALETTE.neutral[700], // borda de input, divisor de lista
-    iconBadge: PALETTE.neutral[500], // fundo do círculo/caixa de ícone — mais claro que o card por trás, pra não sumir no escuro
+    background: PALETTE.neutral[900],
+    backgroundElement: PALETTE.neutral[700],
+    backgroundSelected: PALETTE.neutral[700],
+    surface: PALETTE.neutral[800],
+    border: PALETTE.neutral[700],
+    iconBadge: PALETTE.neutral[500],
     onIconBadge: PALETTE.neutral[0],
-    authBackground: PALETTE.neutral[900], // igual ao fundo padrão — o verde claro é só pro modo claro
+    authBackground: PALETTE.neutral[900],
 
-    // texto
     text: PALETTE.neutral[50],
     textSecondary: PALETTE.neutral[300],
     textTherdiary: PALETTE.neutral[300],
-    segmentedUnselected: PALETTE.neutral[300], // mesmo valor de antes — só o modo claro muda
-    // marca — tons mais claros da rampa, pra manter contraste no fundo escuro
+    segmentedUnselected: PALETTE.neutral[300],
     primary: PALETTE.neutral[800],
     primaryPressed: PALETTE.primary[300],
     onPrimary: PALETTE.primary[900],
@@ -73,9 +54,6 @@ export const Colors = {
     secondaryPressed: PALETTE.secondary[400],
     onSecondary: PALETTE.neutral[900],
 
-    // estados do rebanho — mesmo fundo sólido do modo claro: é uma cor de
-    // status, não decoração de tela, então não precisa (e não deve) mudar
-    // com o tema
     success: PALETTE.success[700],
     onSuccess: PALETTE.neutral[0],
     danger: PALETTE.danger[600],
@@ -87,13 +65,9 @@ export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: "system-ui",
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: "ui-serif",
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: "ui-rounded",
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: "ui-monospace",
   },
   default: {

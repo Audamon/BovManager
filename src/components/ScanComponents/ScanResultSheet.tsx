@@ -88,11 +88,9 @@ const ScanResultSheet = ({
           <Button
             onPress={() => onViewAnimal(result.animal)}
             style={{
-              //marginTop: 20,
               backgroundColor: theme.primaryPressed,
               paddingHorizontal: 20,
               height: 50,
-              //width: 187,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -124,11 +122,9 @@ const ScanResultSheet = ({
           <Button
             onPress={() => onRegisterNow(result.earRing)}
             style={{
-              //marginTop: 20,
               backgroundColor: theme.secondary,
               paddingHorizontal: 20,
               height: 50,
-              //width: 187,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",

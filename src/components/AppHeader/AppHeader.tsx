@@ -43,10 +43,7 @@ const AppHeader = ({ title, subtitle, icon, leftIcon, rightIcon, onBackPress }: 
 const style = StyleSheet.create({
   header: {
     height: 74,
-    //display: "flex",
-    //justifyContent: "center",
     backgroundColor: COLORS.primary,
-    //alignItems: "center",
   },
 });
 

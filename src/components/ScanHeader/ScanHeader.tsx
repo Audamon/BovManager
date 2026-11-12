@@ -14,9 +14,6 @@ interface ScanHeaderProps {
   onFlashPress?: () => void;
   showFlashIcon?: boolean;
   title?: string;
-  /** Overlay escuro da câmera ligada: o fundo é sempre quase preto, nos dois
-   * temas, então o texto precisa ficar sempre na cor clara, não na que o
-   * tema resolveria (que ficaria escura demais no tema claro). */
   overCamera?: boolean;
 }
 const ScanHeader = ({

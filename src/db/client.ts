@@ -6,8 +6,6 @@ const expoDb = openDatabaseSync("bovmanager.db");
 export const db = drizzle(expoDb, { schema });
 
 export const initDb = () => {
-  // Simulação de migração: até existir um fluxo real com drizzle-kit, o
-  // schema é garantido com um CREATE TABLE IF NOT EXISTS direto.
   expoDb.execSync(`
     CREATE TABLE IF NOT EXISTS animals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,15 +20,9 @@ export const initDb = () => {
       created_at INTEGER NOT NULL
     );
   `);
-  // Campo adicionado depois da primeira versão da tabela: instalações
-  // existentes não ganham a coluna sozinhas com o CREATE TABLE IF NOT
-  // EXISTS acima, então tenta um ALTER TABLE e ignora o erro de "coluna já
-  // existe" (instalações novas já nascem com a coluna, pelo CREATE acima).
   try {
     expoDb.execSync(`ALTER TABLE animals ADD COLUMN location TEXT;`);
-  } catch {
-    // coluna já existe, nada a fazer
-  }
+  } catch {}
   expoDb.execSync(`
     CREATE TABLE IF NOT EXISTS transfers (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

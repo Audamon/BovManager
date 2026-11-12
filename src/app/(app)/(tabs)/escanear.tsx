@@ -102,7 +102,6 @@ const style = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 100,
-    //backgroundColor: "#fff", // ou "#fff" para testar
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 22,
@@ -131,12 +130,10 @@ const style = StyleSheet.create({
     width: FINDER_SIZE,
     height: FINDER_SIZE,
     borderWidth: 3,
-    //borderRadius: 20,
     backgroundColor: "transparent",
   },
   scannerText: {
     color: "white",
-    //textAlign: "center",
   },
   scannerTextContainer: {
     position: "absolute",

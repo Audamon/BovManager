@@ -1,8 +1,6 @@
 import Svg, { Circle, Path } from "react-native-svg";
 import TabIconProps from "./TabIconTypes";
 
-// Versão sólida do UserIcon, pra estado ativo da tab bar. Mesma silhueta
-// do outline, só que preenchida em vez de contornada.
 const UserIconFilled = ({ width, height, color }: TabIconProps) => {
   return (
     <Svg viewBox="0 0 24 24" style={{ width: width, height: height }}>

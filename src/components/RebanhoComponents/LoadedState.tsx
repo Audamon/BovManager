@@ -23,7 +23,6 @@ const LoadedState = ({ animais = [] }: LoadedStateProps) => {
         <Pressable key={animal.id} onPress={() => router.push(`/animal/${animal.id}`)}>
           <RebanhoCard
             animal={{
-              name: animal.name ?? undefined,
               earRing: animal.earRing,
               breed: animal.breed,
               age: calcularIdade(animal.birthDate),
